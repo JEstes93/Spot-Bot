@@ -1,0 +1,9 @@
+src/commands/botowner/join.js
+src/commands/botowner/leave.js
+serverSettings.json
+node_modules/
+package-lock.json
+.com.apple.timemachine.supported
+.idea/
+.vscode/
+_*
