@@ -1,0 +1,25 @@
+CopaDot Spot Discord Bot
+
+-Allow users to opt into roles
+
+-Restrict ability for users to opt into certain roles
+
+
+Dav wants:
+
+Davkul - Today at 4:24 AM
+Yeah yeah. Say you’re offline and I ping the role to gather up.
+Obviously you’re offline, not gonna respond or want to be bothered
+A way to skip over offline or away people would be sweet
+???????? - Today at 4:26 AM
+What's the point though?
+If they're offline/away they aren't gonna see it anyway
+Davkul - Today at 4:26 AM
+? I see all notifications if I’m away or idle tho
+Say you’re afk and yellow. I ping the group. You wake up 8hrs later. You have a notification from 8hrs ago
+Not really necessary, no. More like quality of life lol
+???????? - Today at 4:28 AM
+Yeah, I might be able to make something to address it
+Anything else? :smiley:
+Davkul - Today at 4:30 AM
+Hmm. Well, people like tags. This will be tag heaven for em. Besides the splash welcome screen with an option to opt in? Nah man. GG. You done good imo lol
