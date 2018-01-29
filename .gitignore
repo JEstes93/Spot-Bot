@@ -7,3 +7,5 @@ package-lock.json
 .idea/
 .vscode/
 _*
+storage/
+secure.json

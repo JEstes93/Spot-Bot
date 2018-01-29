@@ -14,8 +14,7 @@ const parse = msg => {
             for (let c of str)
                 if (c === char)
                     count++;
-        } else
-            return -1;
+        } else return -1;
         return count;
     }
 
@@ -37,11 +36,9 @@ const parse = msg => {
             let d = Math.abs((qIndex[i] - sc) - (qIndex[i + 1] - sc));
 
             if (d > 0) {
-                console.log(clargs.splice(qIndex[i] - sc, d));
                 clargs[qIndex[i] - sc] = qStr.splice(0, 1);
                 sc += d;
-            } else
-                clargs[qIndex[i] - sc] = qStr.splice(0, 1);
+            } else clargs[qIndex[i] - sc] = qStr.splice(0, 1);
         }
 
         // console.log([].concat.apply([], clargs));
