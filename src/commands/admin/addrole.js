@@ -15,11 +15,8 @@ module.exports = {
                 }
             });
 
-            let propName = clargs[1];
+            let propName = clargs[0];
             let propArr = [];
-
-            // console.log("Auto 1: " + auto);
-
             let serverRole = U.bHasRole(msg.guild.roles.array(), propName);
 
             if (typeof serverRole === 'undefined' || !serverRole)
@@ -28,27 +25,26 @@ module.exports = {
                         'name': propName
                     }).then(res => { U.ChatResponse(msg, `New blank role created: ${res.name}!\nDon't forget to configure this role!`); }, rej => console.error(rej));
                 else return U.ChatResponse(msg, `No corresponding role on server: ${propName}`);
-
-            // console.log("Auto 2: " + auto);
-
-            // else {
-            if (clargs.length <= 2)
-                U.ChatResponse(msg, `Role added with open permissions: ${propName}`);
             else {
-                for (let i = 2; i < clargs.length; i++) {
-                    let _role = U.bHasRole(msg.guild.roles.array(), clargs[i]);
-                    console.log(_role);
+                if (clargs.length < 2)
+                    U.ChatResponse(msg, `Role added with open permissions: ${propName}`);
+                else {
+                    for (let i = 1; i < clargs.length; i++) {
+                        let _role = U.bHasRole(msg.guild.roles.array(), clargs[i]);
+                        // console.log(_role);
 
-                    if (typeof _role != 'undefined' || _role) {
-                        propArr.push(_role.name);
-                    } else
-                        msg.channel.send(`\`\`\`Role: ${_role.name} doesn't exist! Cannot create parameters! \`\`\``);
+                        if (typeof _role != 'undefined' || _role) {
+                            propArr.push(_role.name);
+                        } else
+                            U.ChatResponse(msg, `Role: ${_role.name} doesn't exist! Cannot create parameters!`);
+                    }
                 }
+                return (() => {
+                    perms[propName] = propArr;
+                    U.UpdatePerms(msg.guild.name, perms);
+                    U.ChatResponse(msg, `Role added: ${propName}`);
+                })();
             }
-            return (() => {
-                perms[propName] = propArr;
-                U.UpdatePerms(msg.guild.name, perms);
-            })();
         }
     },
     description: "Adds role and permissions to bot management"

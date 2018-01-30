@@ -6,15 +6,13 @@ module.exports = {
         if (msg.channel.name === 'admin-bot-control') {
             let perms = U.GetPerms(msg.guild.name);
 
-            for (let i = 1; i < clargs.length; i++)
-                perms.hasOwnProperty(clargs[i]) ?
-                    delete perms[clargs[i]] :
-                    msg.channel.send(`\`\`\`Role: ${clargs[i]} doesn't exist!\`\`\``);
-
-            return (() => {
-                U.UpdatePerms(msg.guild.name, perms);
-            })();
+            for (let i = 0; i < clargs.length; i++)
+                if (perms.hasOwnProperty(clargs[i])) {
+                    delete perms[clargs[i]];
+                    U.ChatResponse(msg, `Permissions removed for role: ${clargs[i]}`);
+                } else U.ChatResponse(msg, `No permissions for role: ${clargs[i]}`);
+            return U.UpdatePerms(msg.guild.name, perms);
         }
     },
-    description: "Removes role(s) from "
+    description: "Removes role(s) from bot-managed list"
 };
