@@ -1,0 +1,23 @@
+{
+  "name": "copadot_bot",
+  "version": "1.0.0",
+  "description": "Bot for CopaDot Spot discord server",
+  "main": "bot.js",
+  "dependencies": {
+    "discord.js": "^11.3.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JEstes93/Spot-Bot.git"
+  },
+  "author": "John Estes",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/JEstes93/Spot-Bot/issues"
+  },
+  "homepage": "https://github.com/JEstes93/Spot-Bot#readme"
+}

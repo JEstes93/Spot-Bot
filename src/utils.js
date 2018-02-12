@@ -77,7 +77,7 @@ const bHasRole = (arr, role) => {
  * @param {Void}
  */
 const ChatResponse = (msg, res) => {
-    msg.channel.send(`\`\`\`${res}\`\`\``);
+    return msg.channel.send(`\`\`\`${res}\`\`\``);
 }
 
 /**
