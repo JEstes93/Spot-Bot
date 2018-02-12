@@ -16,7 +16,13 @@ client.on('ready', () => {
     U.ensure_directory('./storage', a => {
         U.ensure_directory(a + '/guilds', b => {
             client.guilds.forEach(g => {
-                U.ensure_directory(b + g.name);
+                U.ensure_directory(b + g.name, c => {
+                    if (!fs.exists(c + '/perms.json'))
+                        fs.writeFile(c + '/perms.json', JSON.stringify({}));
+
+                    if (!fs.exists(c + '/suggestions.json'))
+                        fs.writeFile(c + '/suggestions.json', JSON.stringify({}));
+                });
             });
         });
     });
