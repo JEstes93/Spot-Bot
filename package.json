@@ -4,7 +4,11 @@
   "description": "Bot for CopaDot Spot discord server",
   "main": "bot.js",
   "dependencies": {
-    "discord.js": "^11.3.0"
+    "discord.js": "^11.3.0",
+    "dotenv": "^5.0.0",
+    "mongoose": "^5.0.6",
+    "request": "^2.83.0",
+    "request-promise-native": "^1.0.5"
   },
   "devDependencies": {},
   "scripts": {

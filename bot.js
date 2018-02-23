@@ -1,62 +1,107 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
-const fs = require('fs');
+// const fs = require('fs');
+
+const mongoose = require('mongoose');
+// mongoose.set('debug', true);
+mongoose.connect(process.env.MONGO).then(res => {
+    // console.log(res);
+    Continue();
+}, err => {
+    for (let e of err.errors) {
+        console.log("Error Name:");
+        console.log(e.name);
+        console.log("Error Err:");
+        console.log(e.err);
+    }
+});
+// const Permission = require('./Permission');
+
+// mongoose.connection.model
 
 const P = require('./src/cli-parser');
 const U = require('./src/utils');
 
+//Holds permissions for each server
+// const PM = require('./permsManager');
+// const Perms = new PM();
+
+// const Permission = require('./Permission');
+// const PM = require('./permsManager');
+// const Perms = new PM();
+
 //Command object that executes command logic
 const Command = require('./src/commands/init');
 
-client.on('ready', () => {
-    client.user.setUsername("SpottaDot The Copi Bot");
 
-    console.log('Logged in as ' + client.user.tag + '!');
+function Continue() {
 
-    U.ensure_directory('./storage', a => {
-        U.ensure_directory(a + '/guilds', b => {
-            client.guilds.forEach(g => {
-                U.ensure_directory(b + g.name, c => {
-                    if (!fs.exists(c + '/perms.json'))
-                        fs.writeFile(c + '/perms.json', JSON.stringify({}));
+    const Permission = require('./Permission');
+    const PM = require('./permsManager');
+    const Perms = new PM();
 
-                    if (!fs.exists(c + '/suggestions.json'))
-                        fs.writeFile(c + '/suggestions.json', JSON.stringify({}));
-                });
-            });
+    client.on('ready', () => {
+        client.user.setUsername("SpottaDot The Copi Bot");
+
+        console.log('Logged in as ' + client.user.tag + '!');
+
+        client.guilds.forEach(guild => {
+            // console.log("I'm part of: " + guild.id);
+
+            Permission.findOne({ 'guildId': guild.id }, 'guildId guild perms').then(res => {
+                // console.log(res);
+                if (res && res != null)
+                    Perms.addGuild(res);
+                else {
+                    Permission
+                        .create({
+                            guildId: guild.id,
+                            guild: JSON.stringify(guild),
+                            perms: JSON.stringify({})
+                        })
+                        .then(res => {
+                            // console.log("Creation Response!: " + res);
+                            Perms.addGuild(res);
+                        });
+                }
+            }, err => console.error(err));
+
         });
+
     });
-});
 
-client.on('message', msg => {
-    if (msg.system)
-        return;
-    else if (msg.channel.name != 'get-roles' && msg.channel.name != 'admin-bot-control' && msg.channel.name != 'bot-suggestions')
-        return;
-    else if (U.bHasCommandSignature(msg) != true)
-        return;
-    else {
-    //Parse for strings in quotation marks here
-    let clargs = P.parse(msg.content);
+    client.on('message', msg => {
+        if (msg.system)
+            return;
+        else if (msg.author.bot)
+            return;
+        else if (msg.channel.name != 'get-roles' && msg.channel.name != 'admin-bot-control' && msg.channel.name != 'bot-suggestions')
+            return;
+        else if (U.bHasCommandSignature(msg) != true)
+            return;
+        else {
+            //Parse for strings in quotation marks here
+            let clargs = P.parse(msg.content);
 
-    let commandGiven = clargs.splice(0, 1)[0];
+            let commandGiven = clargs.splice(0, 1)[0];
 
-    if(Command.hasOwnProperty(commandGiven)){
-        Command[commandGiven].execute(msg, clargs);
-    } else {
-        console.log("No command found in Command object!");
+            if (Command.hasOwnProperty(commandGiven)) {
+                Command[commandGiven].execute(msg, clargs, Perms);
+            } else {
+                console.log("No command found in Command object!");
 
-        switch (commandGiven) {
-            default:
-            console.log("No valid commands found!");
-            break;
+                switch (commandGiven) {
+                    default:
+                        console.log("No valid commands found!");
+                        break;
+                }
+            }
+
+            //Necessary? Could be improved?
+            if (clargs[clargs.length - 1] === '-h')
+                msg.delete();
         }
-    }
+    });
 
-    //Necessary? Could be improved?
-    if (clargs[clargs.length - 1] === '-h')
-        msg.delete();
-    }
-});
-
-client.login(JSON.parse(fs.readFileSync('./secure.json')).token);
+    client.login(process.env.DISCORD_TOKEN);
+}

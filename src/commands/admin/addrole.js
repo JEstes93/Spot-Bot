@@ -2,10 +2,12 @@ const U = require('../../utils');
 
 module.exports = {
     name: "addrole",
-    execute: (msg, clargs) => {
+    execute: (msg, clargs, Perms) => {
         if (msg.channel.name === 'admin-bot-control') {
 
-            let perms = U.GetPerms(msg.guild.name);
+            // let perms = U.GetPerms(msg.guild.name);
+
+            let perms = Perms.getPerms(msg.guild.id);
 
             //For auto-creating role
             let auto = clargs.find((e, ind) => {
@@ -41,7 +43,8 @@ module.exports = {
                 }
                 return (() => {
                     perms[propName] = propArr;
-                    U.UpdatePerms(msg.guild.name, perms);
+                    // U.UpdatePerms(msg.guild.name, perms);
+                    Perms.savePerms(msg.guild.id, perms);
                     U.ChatResponse(msg, `Role added: ${propName}`);
                 })();
             }

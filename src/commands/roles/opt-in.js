@@ -2,10 +2,12 @@ const U = require('../../utils');
 
 module.exports = {
         name: "opt-in",
-        execute: (msg, clargs) => {
+        execute: (msg, clargs, Perms) => {
                 if (msg.channel.name === 'get-roles') {
                         let user = U.get_guild_member(msg.author, msg.guild);
-                        let perms = U.GetPerms(msg.guild.name);
+                        // let perms = U.GetPerms(msg.guild.name);
+                        let perms = Perms.getPerms(msg.guild.id);
+
                         if (typeof perms != 'undefined' && perms) {
                                 for (let i = 0; i < clargs.length; i++) {
                                         let _role = U.bHasRole(msg.guild.roles.array(), clargs[i]);
