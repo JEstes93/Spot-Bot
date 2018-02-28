@@ -39,4 +39,4 @@ Command will attempt to opt out of roles, in order, until the end of a space-sep
 ## Current Status
 
 Currently, this bot is private, though that may change in the future. However, the source code is free-to-use under the MIT license.
-This bot in it live state is running on Heroku and uses MongDB's Atlas AWS for a database.
+This bot in it's live state is running on Heroku and uses MongDB's Atlas AWS for a database.
