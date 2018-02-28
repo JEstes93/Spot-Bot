@@ -21,13 +21,11 @@ const parse = msg => {
     //Array of indices indicating which clargs elements are contain beginning and ending quotation marks
     //Repeating indices indicate a single word within quotes
     let qIndex = [].concat.apply([], clargs.map((e, i) => {
-
         let c = charOccurs(e, '"');
         if (c === 2)
             return [i, i];
         else if (c > 0 && c < 2)
             return i;
-
     }).filter(e => e != null));
 
     if (qIndex.length % 2 === 0) {
@@ -41,7 +39,6 @@ const parse = msg => {
             } else clargs[qIndex[i] - sc] = qStr.splice(0, 1);
         }
 
-        // console.log([].concat.apply([], clargs));
         return [].concat.apply([], clargs);
     } else return false;
 }

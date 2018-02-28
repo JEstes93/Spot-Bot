@@ -1,7 +1,5 @@
 const Permission = require('./Permission');
 
-const fs = require('fs');
-
 function PermissionManager() {
 
     //Guilds
@@ -103,16 +101,6 @@ function PermissionManager() {
             console.log(m);
         }
     }
-
-    // this.printAll = function(){
-    //     // for(let m of this.models){
-    //     //     console.log(m);
-    //     // }
-
-    //     fs.writeFile('./PMoutput.json', JSON.stringify())
-
-    // }
-
 }
 
 module.exports = PermissionManager;
