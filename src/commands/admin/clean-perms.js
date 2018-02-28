@@ -4,7 +4,6 @@ module.exports = {
         name: "clean-perms",
         execute: (msg, clargs, Perms) => {
                 if (msg.channel.name === 'admin-bot-control') {
-                        // let perms = U.GetPerms(msg.guild.name);
                         let perms = Perms.getPerms(msg.guild.id);
 
                         for (let p in perms)
@@ -13,7 +12,6 @@ module.exports = {
                                         delete perms[p];
                                 }
 
-                        // U.UpdatePerms(msg.guild.name, perms);
                         Perms.savePerms(msg.guild.id, perms);
                 }
         },
