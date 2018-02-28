@@ -21,6 +21,9 @@ Command will print information about the bot. Valid args:
 
 c!clean-perms
 Command will check that all role permissions have a corresponding role. If not, the permissions will be deleted.
+
+c!avail
+Command will list roles available for opting in, and any roles they may require to do so.
 ```
 
 ### get-roles
@@ -34,6 +37,9 @@ Command will attempt to opt into roles, in order, until the end of a space-separ
 
 c!opt-out [...list of roles...]
 Command will attempt to opt out of roles, in order, until the end of a space-separated list. Roles that include spaces may be denoted by  wrapping them with quotation marks (").
+
+c!avail
+Command will list roles available for opting in, and any roles they may require to do so.
 ```
 
 ## Current Status

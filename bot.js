@@ -21,7 +21,6 @@ const Command = require('./src/commands/init');
 
 
 function Continue() {
-
     const Permission = require('./Permission');
     const PM = require('./permsManager');
     const Perms = new PM();
@@ -32,10 +31,7 @@ function Continue() {
         console.log('Logged in as ' + client.user.tag + '!');
 
         client.guilds.forEach(guild => {
-            // console.log("I'm part of: " + guild.id);
-
             Permission.findOne({ 'guildId': guild.id }, 'guildId guild perms').then(res => {
-                // console.log(res);
                 if (res && res != null)
                     Perms.addGuild(res);
                 else {
@@ -46,14 +42,11 @@ function Continue() {
                             perms: JSON.stringify({})
                         })
                         .then(res => {
-                            // console.log("Creation Response!: " + res);
                             Perms.addGuild(res);
                         });
                 }
             }, err => console.error(err));
-
         });
-
     });
 
     client.on('message', msg => {
@@ -90,6 +83,7 @@ function Continue() {
     });
 
     client.on('guildCreate', guild => {
+        console.log(`Invited to: ${guild.name}!`);
         Permission.findOne({ 'guildId': guild.id }, 'guildId guild perms').then(res => {
             if (res && res != null)
                 Perms.addGuild(res);
@@ -109,6 +103,7 @@ function Continue() {
     });
 
     client.on('guildDelete', guild => {
+        console.log(`Banished from: ${guild.name}!`);
         Permission.deleteOne({ 'guildId': guild.id }).then(res => {
             Perms.removeGuild(guild.id);
         });

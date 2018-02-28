@@ -1,11 +1,16 @@
 //Test string
-// const msg = "c!help \"Web Dev\" asdfasdfasdfasdfsadf \"Game Dev\" \"Hero\" asdfjnsa asjdnfjnasdn askdfk \"Buck Hibana Ash\" \"Thermite\"";
+//const msg = "c!help \"Web Dev\" asdfasdfasdfasdfsadf \"Game Dev\" \"Hero\" asdfjnsa asjdnfjnasdn askdfk \"Buck Hibana Ash\" \"Thermite\"";
 
 //Parses commandline args from within quotes and returns an array
 const parse = msg => {
     let clargs = msg.split('!')[1].split(' '); //array holding all space divided args after '!'
 
-    let qStr = msg.split('"').map((e, i) => { if ((i + 1) % 2 === 0) return e; }).filter(e => e != null); //array holding all strings within quotation marks
+    //array holding all strings within quotation marks
+    let qStr = msg.split('"')
+        .map((e, i, arr) => {
+            if ((i + 1) % 2 === 0)
+                return e;
+        }).filter(e => e != null);
 
     //Returns how many times a char occurs within a string
     const charOccurs = (str, char) => {
@@ -28,18 +33,24 @@ const parse = msg => {
             return i;
     }).filter(e => e != null));
 
-    if (qIndex.length % 2 === 0) {
-        let sc = 0; //Splice count
-        for (let i = 0; i < qIndex.length; i += 2) {
-            let d = Math.abs((qIndex[i] - sc) - (qIndex[i + 1] - sc));
+    qIndex = qIndex.map((e, i, arr) => {
+        if (e === arr[i - 1])
+            return 'undefined';
+        else return e;
+    }).filter(e => e != null);
 
-            if (d > 0) {
-                clargs[qIndex[i] - sc] = qStr.splice(0, 1);
-                sc += d;
-            } else clargs[qIndex[i] - sc] = qStr.splice(0, 1);
+    if (qIndex.length % 2 === 0) {
+        for (let i = 0; i < qIndex.length; i += 2) {
+            if (typeof qIndex[i] === 'number')
+                clargs[qIndex[i]] = qStr.shift();
         }
 
-        return [].concat.apply([], clargs);
+        for (let i = 1; i < qIndex.length; i += 2) {
+            if (typeof qIndex[i] === 'number')
+                delete clargs[qIndex[i]];
+        }
+
+        return [].concat.apply([], clargs.filter(e => e != null));
     } else return false;
 }
 
