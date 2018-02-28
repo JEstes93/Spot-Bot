@@ -90,9 +90,7 @@ function Continue() {
     });
 
     client.on('guildCreate', guild => {
-
         Permission.findOne({ 'guildId': guild.id }, 'guildId guild perms').then(res => {
-            // console.log(res);
             if (res && res != null)
                 Perms.addGuild(res);
             else {
@@ -103,13 +101,18 @@ function Continue() {
                         perms: JSON.stringify({})
                     })
                     .then(res => {
-                        // console.log("Creation Response!: " + res);
                         Perms.addGuild(res);
                     });
             }
         }, err => console.error(err));
 
-    })
+    });
+
+    client.on('guildDelete', guild => {
+        Permission.deleteOne({ 'guildId': guild.id }).then(res => {
+            Perms.removeGuild(guild.id);
+        });
+    });
 
     client.login(process.env.DISCORD_TOKEN);
 }
