@@ -1,11 +1,8 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
-// const fs = require('fs');
 
 const mongoose = require('mongoose');
-// mongoose.set('debug', true);
 mongoose.connect(process.env.MONGO).then(res => {
-    // console.log(res);
     Continue();
 }, err => {
     for (let e of err.errors) {
@@ -15,20 +12,9 @@ mongoose.connect(process.env.MONGO).then(res => {
         console.log(e.err);
     }
 });
-// const Permission = require('./Permission');
-
-// mongoose.connection.model
 
 const P = require('./src/cli-parser');
 const U = require('./src/utils');
-
-//Holds permissions for each server
-// const PM = require('./permsManager');
-// const Perms = new PM();
-
-// const Permission = require('./Permission');
-// const PM = require('./permsManager');
-// const Perms = new PM();
 
 //Command object that executes command logic
 const Command = require('./src/commands/init');
@@ -102,6 +88,28 @@ function Continue() {
                 msg.delete();
         }
     });
+
+    client.on('guildCreate', guild => {
+
+        Permission.findOne({ 'guildId': guild.id }, 'guildId guild perms').then(res => {
+            // console.log(res);
+            if (res && res != null)
+                Perms.addGuild(res);
+            else {
+                Permission
+                    .create({
+                        guildId: guild.id,
+                        guild: JSON.stringify(guild),
+                        perms: JSON.stringify({})
+                    })
+                    .then(res => {
+                        // console.log("Creation Response!: " + res);
+                        Perms.addGuild(res);
+                    });
+            }
+        }, err => console.error(err));
+
+    })
 
     client.login(process.env.DISCORD_TOKEN);
 }
