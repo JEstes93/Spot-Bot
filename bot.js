@@ -26,11 +26,10 @@ mongoose.connect(process.env.MONGO).then(res => {
         console.log('Logged in as ' + client.user.tag + '!');
 
         client.guilds.forEach(guild => {
-            Permission.findOne({ 'guildId': guild.id }, 'guildId guild perms').then(res => {
-                if (res && res != null)
-                    Perms.addGuild(res);
-                else {
-                    Permission
+            Permission.findOne({ 'guildId': guild.id }, 'guildId guild perms')
+                .then(res => (res && res != null)
+                    ? Perms.addGuild(res)
+                    : Permission
                         .create({
                             guildId: guild.id,
                             guild: JSON.stringify(guild),
@@ -38,41 +37,12 @@ mongoose.connect(process.env.MONGO).then(res => {
                         })
                         .then(res => {
                             Perms.addGuild(res);
-                        });
-                }
-            }, err => console.error(err));
+                        }), err => console.error(err));
         });
     });
 
-    // client.on('guildMemberAvailable presenceUpdate ')
-
-    // client.on('guildMemberUpdate', (old, newM) => {
-    //     console.log('guildMemberUpdate');
-    //     console.log(old.user.username);
-    //     console.log(old.user.presence);
-    //     console.log(newM.user.username);
-    //     console.log(newM.user.presence);
-    // });
-
-    // client.on('guildMemberAvailable', member => {
-    //     console.log('guildMemberAvailable');
-    //     console.log(member.user.username);
-    // });
-
-    // client.on('presenceUpdate', (old, newM) => {
-    //     console.log('presenceUpdate');
-    //     console.log(old.user.username);
-    //     console.log(old.user.presence);
-    //     console.log(newM.user.username);
-    //     console.log(newM.user.presence);
-    // });
-
     client.on('message', msg => {
-        if (msg.system)
-            return;
-        else if (msg.author.bot)
-            return;
-        else if (msg.channel.name != 'get-roles' && msg.channel.name != 'admin-bot-control' && msg.channel.name != 'bot-suggestions')
+        if (msg.system || msg.author.bot)
             return;
         else if (U.bHasCommandSignature(msg) != true)
             return;
@@ -88,7 +58,7 @@ mongoose.connect(process.env.MONGO).then(res => {
                 console.log("No command found in Command object!");
 
             //Necessary? Could be improved?
-            if (clargs[clargs.length - 1] === '-h')
+            if (clargs.includes('-h'))
                 msg.delete();
         }
     });
