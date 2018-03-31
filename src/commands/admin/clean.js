@@ -5,7 +5,7 @@ module.exports = {
             if (clargs.length < 1) return;
 
             const num = Math.min(parseInt(clargs[0], 10), 100);
-            const addin = (num === 100) ? ` (Note: Limit is 100, greater values will be reduce to match)` : '';
+            const addin = (num === 100) ? ` (Note: Limit is 100, greater values will be reduced to match.)` : '';
 
             msg.reply(`**Are you sure?**${addin}`)
                 .then(reply => reply.react('✅')
