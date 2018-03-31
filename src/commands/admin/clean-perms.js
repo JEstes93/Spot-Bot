@@ -2,8 +2,9 @@ const U = require('../../utils');
 
 module.exports = {
         name: "clean-perms",
-        execute: (msg, clargs, Perms) => {
+        execute: (msg, clargs, options) => {
                 if (msg.channel.name === 'admin-bot-control') {
+                        const { Perms } = options;
                         let perms = Perms.getPerms(msg.guild.id);
 
                         for (let p in perms)

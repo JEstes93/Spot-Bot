@@ -2,8 +2,9 @@ const U = require('../../utils');
 
 module.exports = {
         name: "opt-out",
-        execute: (msg, clargs, Perms) => {
+        execute: (msg, clargs, options) => {
                 if (msg.channel.name === 'get-roles') {
+                        const { Perms } = options;
                         let user = U.get_guild_member(msg.author, msg.guild);
                         // let perms = U.GetPerms(msg.guild.name);
                         let perms = Perms.getPerms(msg.guild.id);

@@ -2,8 +2,9 @@ const U = require('../../utils');
 
 module.exports = {
         name: "print",
-        execute: (msg, clargs, Perms) => {
+        execute: (msg, clargs, options) => {
                 if (U.get_guild_member(msg.author, msg.guild).hasPermission("ADMINISTRATOR")) {
+                        const { Perms } = options;
                         switch (clargs[0]) {
                                 case 'perms':
                                         let out = JSON.stringify(Perms.getPerms(msg.guild.id));

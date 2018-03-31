@@ -1,4 +1,4 @@
-const Permission = require('./Permission');
+const Permission = require('../Models/Permission');
 
 function PermissionManager() {
 

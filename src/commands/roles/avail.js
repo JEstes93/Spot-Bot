@@ -1,9 +1,10 @@
-const U = require('../../utils');
+// const U = require('../../utils');
 
 module.exports = {
     name: "avail",
-    execute: (msg, clargs, Perms) => {
+    execute: (msg, clargs, options) => {
         if (msg.channel.name === 'get-roles' || msg.channel.name === 'admin-bot-control') {
+            const { U, Perms } = options;
             let perms = Perms.getPerms(msg.guild.id);
             let responseText = '';
 

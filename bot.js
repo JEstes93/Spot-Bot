@@ -3,26 +3,21 @@ const client = new Discord.Client();
 
 const mongoose = require('mongoose');
 mongoose.connect(process.env.MONGO).then(res => {
-    Continue();
-}, err => {
-    for (let e of err.errors) {
-        console.log("Error Name:");
-        console.log(e.name);
-        console.log("Error Err:");
-        console.log(e.err);
-    }
-});
+    const P = require('./src/cli-parser');
+    const U = require('./src/utils');
 
-const P = require('./src/cli-parser');
-const U = require('./src/utils');
+    //Command object that executes command logic
+    const Command = require('./src/commands/init');
 
-//Command object that executes command logic
-const Command = require('./src/commands/init');
+    const Spotify = require('node-spotify-api');
+    const spotify = new Spotify({
+        id: process.env.SpotifyID,
+        secret: process.env.SpotifySecret
+    });
 
-
-function Continue() {
-    const Permission = require('./Permission');
-    const PM = require('./permsManager');
+    const User = require('./src/db/Models/User');
+    const Permission = require('./src/db/Models/Permission');
+    const PM = require('./src/db/utils/permsManager');
     const Perms = new PM();
 
     client.on('ready', () => {
@@ -49,6 +44,29 @@ function Continue() {
         });
     });
 
+    // client.on('guildMemberAvailable presenceUpdate ')
+
+    // client.on('guildMemberUpdate', (old, newM) => {
+    //     console.log('guildMemberUpdate');
+    //     console.log(old.user.username);
+    //     console.log(old.user.presence);
+    //     console.log(newM.user.username);
+    //     console.log(newM.user.presence);
+    // });
+
+    // client.on('guildMemberAvailable', member => {
+    //     console.log('guildMemberAvailable');
+    //     console.log(member.user.username);
+    // });
+
+    // client.on('presenceUpdate', (old, newM) => {
+    //     console.log('presenceUpdate');
+    //     console.log(old.user.username);
+    //     console.log(old.user.presence);
+    //     console.log(newM.user.username);
+    //     console.log(newM.user.presence);
+    // });
+
     client.on('message', msg => {
         if (msg.system)
             return;
@@ -64,17 +82,10 @@ function Continue() {
 
             let commandGiven = clargs.splice(0, 1)[0];
 
-            if (Command.hasOwnProperty(commandGiven)) {
-                Command[commandGiven].execute(msg, clargs, Perms);
-            } else {
+            if (Command.hasOwnProperty(commandGiven))
+                Command[commandGiven].execute(msg, clargs, { client, Perms, spotify, U, db: { User } });
+            else
                 console.log("No command found in Command object!");
-
-                switch (commandGiven) {
-                    default:
-                        console.log("No valid commands found!");
-                        break;
-                }
-            }
 
             //Necessary? Could be improved?
             if (clargs[clargs.length - 1] === '-h')
@@ -88,15 +99,13 @@ function Continue() {
             if (res && res != null)
                 Perms.addGuild(res);
             else {
-                Permission
-                    .create({
-                        guildId: guild.id,
-                        guild: JSON.stringify(guild),
-                        perms: JSON.stringify({})
-                    })
-                    .then(res => {
-                        Perms.addGuild(res);
-                    });
+                Permission.create({
+                    guildId: guild.id,
+                    guild: JSON.stringify(guild),
+                    perms: JSON.stringify({})
+                }).then(res => {
+                    Perms.addGuild(res);
+                });
             }
         }, err => console.error(err));
 
@@ -110,4 +119,12 @@ function Continue() {
     });
 
     client.login(process.env.DISCORD_TOKEN);
-}
+
+}, err => {
+    for (let e of err.errors) {
+        console.log("Error Name:");
+        console.log(e.name);
+        console.log("Error Err:");
+        console.log(e.err);
+    }
+});
